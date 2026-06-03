@@ -6,6 +6,7 @@ import Link from 'next/link';
 // import hooks
 import useMounted from 'hooks/useMounted';
 import { Fragment } from 'react';
+import { basePath } from '../next.config';
 
 const NotFound = () => {
   const hasMounted = useMounted();
@@ -17,7 +18,7 @@ const NotFound = () => {
             <Col sm={12}>
               <div className="text-center">
                 <div className="mb-3">
-                  <Image src="/images/error/404-error-img.png" alt="" className="img-fluid" />
+                  <Image src={`${basePath}/images/error/404-error-img.png`} alt="" className="img-fluid" />
                 </div>
                 <h1 className="display-4 fw-bold">Oops! the page not found.</h1>
                 <p className="mb-4">Or simply leverage the expertise of our consultation

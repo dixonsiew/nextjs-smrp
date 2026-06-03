@@ -12,7 +12,7 @@ import {
 } from 'react-bootstrap';
 
 import AuthService from '../app/api/auth';
-import { Loading } from '../components/Loading';
+import { basePath } from '../next.config';
 
 // simple bar scrolling used for notification item scrolling
 import SimpleBar from 'simplebar-react';
@@ -122,7 +122,7 @@ const QuickMenu = () => {
             className="rounded-circle"
             id="dropdownUser">
             <div className="avatar avatar-md avatar-indicators avatar-online">
-              <Image alt="avatar" src='/images/avatar/avatar-1.jpg' className="rounded-circle" />
+              <Image alt="avatar" src={`${basePath}/images/avatar/avatar-1.jpg`} className="rounded-circle" />
             </div>
           </Dropdown.Toggle>
           <Dropdown.Menu
