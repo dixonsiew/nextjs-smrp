@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
   basePath: '/nextjs-smrp',
   reactStrictMode: true,
   async headers() {
