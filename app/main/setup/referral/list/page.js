@@ -47,7 +47,7 @@ const page = () => {
   const load = async () => {
     setUiData(prev => ({ ...prev, loading: true }));
     try {
-      const response = await ReferralService.list(uiData.page, pageSize, uiData.sort, uiData.sortDir);
+      const response = await ReferralService.list(listStore.getPage(), pageSize, listStore.getSort(), listStore.getSortDir());
       setUiData(prev => ({
         ...prev,
         init: false,

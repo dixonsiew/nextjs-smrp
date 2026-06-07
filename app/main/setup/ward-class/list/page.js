@@ -33,8 +33,8 @@ const page = () => {
   });
 
   useEffect(() => {
-    if (listStore.getSearch().search !== '') {
-      onSearch(listStore.getSearch().search);
+    if (listStore.getSearch() !== '') {
+      onSearch(listStore.getSearch());
     } else {
       load();
     }
