@@ -7,41 +7,23 @@ import { Loading } from '../../../../../components/Loading';
 import { List } from '../../list';
 import SpecialityService from '../../../../api/setup/speciality';
 import AppConstant from '../../../../constants';
+import { useListStore } from './listStore';
 
 const page = () => {
-  const uiState = 'setup.speciality.speciality-listing';
   const title = 'Speciality';
   const pageSize = AppConstant.PAGE_SIZE;
 
   const router = useRouter();
+  const listStore = useListStore();
   const [refresh, setRefresh] = useState(false);
   const [uiData, setUiData] = useState(() => {
     const o = {
+      init: true,
       loading: false,
       list: [],
       totalCount: 0,
       totalPage: 0,
-      page: 1,
-      search: '',
-      sort: 'code',
-      sortDir: 'asc',
-      sx: 0,
-      sy: 0
     };
-    if (!localStorage) {
-      return o;
-    }
-
-    const item = localStorage.getItem(uiState);
-    if (item) {
-      const parsed = JSON.parse(item);
-      o.page = parsed.page;
-      o.search = parsed.search;
-      o.sort = parsed.sort;
-      o.sortDir = parsed.sortDir;
-      o.sx = parsed.sx;
-      o.sy = parsed.sy;
-    }
     return o;
   })
   const [deleteModal, setDeleteModal] = useState({
@@ -51,24 +33,24 @@ const page = () => {
   });
 
   useEffect(() => {
-    if (uiData.search !== '') {
-      onSearch(uiData.search);
+    if (listStore.getSearch() !== '') {
+      onSearch(listStore.getSearch());
     } else {
       load();
     }
 
     setTimeout(() => {
-      window.scrollTo(uiData.sx, uiData.sy)
+      window.scrollTo(listStore.getSx(), listStore.getSy())
     }, 200);
-    localStorage.removeItem(uiState);
   }, [refresh])
 
   const load = async () => {
     setUiData(prev => ({ ...prev, loading: true }));
     try {
-      const response = await SpecialityService.list(uiData.page, pageSize, uiData.sort, uiData.sortDir);
+      const response = await SpecialityService.list(listStore.getPage(), pageSize, listStore.getSort(), listStore.getSortDir());
       setUiData(prev => ({
         ...prev,
+        init: false,
         loading: false,
         list: response.data,
         totalCount: Number(response.headers[AppConstant.HTTP_HEADER.X_TOTAL_COUNT]),
@@ -78,23 +60,25 @@ const page = () => {
     } catch (error) {
 
     } finally {
-      setUiData(prev => ({ ...prev, loading: false }));
+      setUiData(prev => ({ ...prev, init: false, loading: false }));
     }
   }
 
   const onSearch = async (e) => {
-    setUiData(prev => ({ ...prev, search: e, page: 1, loading: true }));
+    listStore.setSearch(e);
+    listStore.setPage(1);
+    setUiData(prev => ({ ...prev, loading: true }));
     try {
-      const response = await SpecialityService.search(uiData.page, pageSize, uiData.sort, uiData.sortDir, e);
+      const response = await SpecialityService.search(listStore.getPage(), pageSize, listStore.getSort(), listStore.getSortDir(), e);
       setUiData(prev => ({
         ...prev,
+        init: false,
         loading: false,
         list: response.data,
         totalCount: Number(response.headers[AppConstant.HTTP_HEADER.X_TOTAL_COUNT]),
         totalPage: Number(response.headers[AppConstant.HTTP_HEADER.X_TOTAL_PAGE]),
-        sx: 0,
-        sy: 0
       }));
+      listStore.setScroll(0, 0);
       setRefresh(prev => !prev);
       return
       // setTimeout(() => {
@@ -104,35 +88,24 @@ const page = () => {
     } catch (error) {
 
     } finally {
-      setUiData(prev => ({ ...prev, loading: false }));
+      setUiData(prev => ({ ...prev, init: false, loading: false }));
       setRefresh(prev => !prev);
     }
   }
 
   const onSortBy = (e) => {
     if (e.sort === '' && e.dir === 'asc') {
-      setUiData(prev => ({ ...prev, sort: 'code', sortDir: 'asc' }));
+      listStore.setSort('code', 'asc');
     } else {
-      setUiData(prev => ({ ...prev, sort: e.sort, sortDir: e.dir }));
+      listStore.setSort(e.sort, e.dir);
     }
 
+    listStore.setScroll(window.scrollX, window.scrollY);
     setRefresh(prev => !prev);
   }
 
-  const saveUIState = () => {
-    const uiStateData = {
-      page: uiData.page,
-      search: uiData.search,
-      sort: uiData.sort,
-      sortDir: uiData.sortDir,
-      sx: window.scrollX,
-      sy: window.scrollY,
-    }
-    localStorage.setItem(uiState, JSON.stringify(uiStateData));
-  }
-
   const goto = (path) => {
-    saveUIState();
+    listStore.setScroll(window.scrollX, window.scrollY);
     router.push(`/main/setup/speciality/${path}`);
   }
 
@@ -159,7 +132,8 @@ const page = () => {
   }
 
   const onPageChange = (page) => {
-    setUiData(prev => ({ ...prev, page, sx: window.scrollX, sy: window.scrollY }));
+    listStore.setPage(page);
+    listStore.setScroll(window.scrollX, window.scrollY);
     setRefresh(prev => !prev);
   }
 
@@ -170,6 +144,7 @@ const page = () => {
   return <List
     title={title}
     uiData={uiData}
+    listStore={listStore}
     onSearch={onSearch}
     onCreate={() => goto('create')}
     onSortBy={onSortBy}

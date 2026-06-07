@@ -12,41 +12,23 @@ import { SortColumn } from '../../../../../components/SortColumn';
 import { ConfirmModal } from '../../../../../components/ConfirmModal';
 import UserService from '../../../../api/setup/user';
 import AppConstant from '../../../../constants';
+import { useListStore } from './listStore';
 
 const page = () => {
-  const uiState = 'setup.user.user-listing';
   const title = 'User';
   const pageSize = AppConstant.PAGE_SIZE;
 
   const router = useRouter();
+  const listStore = useListStore();
   const [refresh, setRefresh] = useState(false);
   const [uiData, setUiData] = useState(() => {
     const o = {
+      init: true,
       loading: false,
       list: [],
       totalCount: 0,
       totalPage: 0,
-      page: 1,
-      search: '',
-      sort: 'username',
-      sortDir: 'asc',
-      sx: 0,
-      sy: 0
     };
-    if (!localStorage) {
-      return o;
-    }
-
-    const item = localStorage.getItem(uiState);
-    if (item) {
-      const parsed = JSON.parse(item);
-      o.page = parsed.page;
-      o.search = parsed.search;
-      o.sort = parsed.sort;
-      o.sortDir = parsed.sortDir;
-      o.sx = parsed.sx;
-      o.sy = parsed.sy;
-    }
     return o;
   })
   const [deleteModal, setDeleteModal] = useState({
@@ -56,24 +38,24 @@ const page = () => {
   });
 
   useEffect(() => {
-    if (uiData.search !== '') {
-      onSearch(uiData.search);
+    if (listStore.getSearch() !== '') {
+      onSearch(listStore.getSearch());
     } else {
       load();
     }
 
     setTimeout(() => {
-      window.scrollTo(uiData.sx, uiData.sy)
+      window.scrollTo(listStore.getSx(), listStore.getSy())
     }, 200);
-    localStorage.removeItem(uiState);
   }, [refresh])
 
   const load = async () => {
     setUiData(prev => ({ ...prev, loading: true }));
     try {
-      const response = await UserService.list(uiData.page, pageSize, uiData.sort, uiData.sortDir);
+      const response = await UserService.list(listStore.getPage(), pageSize, listStore.getSort(), listStore.getSortDir());
       setUiData(prev => ({
         ...prev,
+        init: false,
         loading: false,
         list: response.data,
         totalCount: Number(response.headers[AppConstant.HTTP_HEADER.X_TOTAL_COUNT]),
@@ -83,23 +65,25 @@ const page = () => {
     } catch (error) {
 
     } finally {
-      setUiData(prev => ({ ...prev, loading: false }));
+      setUiData(prev => ({ ...prev, init: false, loading: false }));
     }
   }
 
   const onSearch = async (e) => {
-    setUiData(prev => ({ ...prev, search: e, page: 1, loading: true }));
+    listStore.setSearch(e);
+    listStore.setPage(1);
+    setUiData(prev => ({ ...prev, loading: true }));
     try {
-      const response = await UserService.search(uiData.page, pageSize, uiData.sort, uiData.sortDir, e);
+      const response = await UserService.search(listStore.getPage(), pageSize, listStore.getSort(), listStore.getSortDir(), e);
       setUiData(prev => ({
         ...prev,
+        init: false,
         loading: false,
         list: response.data,
         totalCount: Number(response.headers[AppConstant.HTTP_HEADER.X_TOTAL_COUNT]),
         totalPage: Number(response.headers[AppConstant.HTTP_HEADER.X_TOTAL_PAGE]),
-        sx: 0,
-        sy: 0
       }));
+      listStore.setScroll(0, 0);
       setRefresh(prev => !prev);
       return
       // setTimeout(() => {
@@ -109,35 +93,24 @@ const page = () => {
     } catch (error) {
 
     } finally {
-      setUiData(prev => ({ ...prev, loading: false }));
+      setUiData(prev => ({ ...prev, init: false, loading: false }));
       setRefresh(prev => !prev);
     }
   }
 
   const onSortBy = (e) => {
     if (e.sort === '' && e.dir === 'asc') {
-      setUiData(prev => ({ ...prev, sort: 'username', sortDir: 'asc' }));
+      listStore.setSort('username', 'asc');
     } else {
-      setUiData(prev => ({ ...prev, sort: e.sort, sortDir: e.dir }));
+      listStore.setSort(e.sort, e.dir);
     }
 
+    listStore.setScroll(window.scrollX, window.scrollY);
     setRefresh(prev => !prev);
   }
 
-  const saveUIState = () => {
-    const uiStateData = {
-      page: uiData.page,
-      search: uiData.search,
-      sort: uiData.sort,
-      sortDir: uiData.sortDir,
-      sx: window.scrollX,
-      sy: window.scrollY,
-    }
-    localStorage.setItem(uiState, JSON.stringify(uiStateData));
-  }
-
   const goto = (path) => {
-    saveUIState();
+    listStore.setScroll(window.scrollX, window.scrollY);
     router.push(`/main/setup/user/${path}`);
   }
 
@@ -164,7 +137,8 @@ const page = () => {
   }
 
   const onPageChange = (page) => {
-    setUiData(prev => ({ ...prev, page, sx: window.scrollX, sy: window.scrollY }));
+    listStore.setPage(page);
+    listStore.setScroll(window.scrollX, window.scrollY);
     setRefresh(prev => !prev);
   }
 
@@ -172,6 +146,10 @@ const page = () => {
     const ls = item.roles || [];
     const lr = ls.map(role => role.name);
     return lr.join(', ');
+  }
+
+  if (uiData.init) {
+    return <></>
   }
 
   if (uiData.loading) {
@@ -190,7 +168,7 @@ const page = () => {
           <div className="card-header">
             <div className="row">
               <div className="col-sm-6 col-12 p-1">
-                <SearchInput msearch={uiData.search} onSearch={onSearch} />
+                <SearchInput msearch={listStore.getSearch()} onSearch={onSearch} />
               </div>
               <div className="col-sm-6 col-12 p-1 text-end">
                 <button type="button" className="btn btn-primary" onClick={() => goto('create')}>
@@ -211,16 +189,16 @@ const page = () => {
                   <thead>
                     <tr>
                       <th>
-                        <SortColumn name={'Username'} sort={'username'} dir={uiData.sortDir} current={uiData.sort} onSortBy={onSortBy} />
+                        <SortColumn name={'Username'} sort={'username'} dir={listStore.getSortDir()} current={listStore.getSort()} onSortBy={onSortBy} />
                       </th>
                       <th>
-                        <SortColumn name={'First name'} sort={'first_name'} dir={uiData.sortDir} current={uiData.sort} onSortBy={onSortBy} />
+                        <SortColumn name={'First name'} sort={'first_name'} dir={listStore.getSortDir()} current={listStore.getSort()} onSortBy={onSortBy} />
                       </th>
                       <th>
-                        <SortColumn name={'Last name'} sort={'last_name'} dir={uiData.sortDir} current={uiData.sort} onSortBy={onSortBy} />
+                        <SortColumn name={'Last name'} sort={'last_name'} dir={listStore.getSortDir()} current={listStore.getSort()} onSortBy={onSortBy} />
                       </th>
                       <th>
-                        <SortColumn name={'Last Login'} sort={'last_login'} dir={uiData.sortDir} current={uiData.sort} onSortBy={onSortBy} />
+                        <SortColumn name={'Last Login'} sort={'last_login'} dir={listStore.getSortDir()} current={listStore.getSort()} onSortBy={onSortBy} />
                       </th>
                       <th>Role</th>
                       <th></th>
@@ -252,12 +230,12 @@ const page = () => {
           {uiData.totalCount > 0 && (
             <div className={`card-footer ${uiData.loading ? 'd-none' : ''}`}>
               <div className="float-start pg-label">
-                Page {uiData.page} / {uiData.totalPage} of {uiData.totalCount} record(s)
+                Page {listStore.getPage()} / {uiData.totalPage} of {uiData.totalCount} record(s)
               </div>
               <div className="float-end">
                 <ResponsivePagination
                   total={uiData.totalPage}
-                  current={uiData.page}
+                  current={listStore.getPage()}
                   onPageChange={page => onPageChange(page)}
                 />
               </div>
