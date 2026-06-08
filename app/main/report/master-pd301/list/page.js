@@ -8,18 +8,20 @@ import ReportService from '../../../../api/report/pd301';
 import AppConstant from '../../../../../app/constants';
 import Helper from '../../../../../utils/helper';
 import download from 'downloadjs';
+import useListStore from './listStore';
 
 const page = () => {
-  const uiState = 'report.master-pd301.master-pd301-listing';
   const title = 'PD301';
   const placeholderdateFrom = 'Discharge From Date';
   const placeholderdateTo = 'Discharge To Date';
   const pageSize = AppConstant.PAGE_SIZE;
 
   const router = useRouter();
+  const listStore = useListStore();
   const [refresh, setRefresh] = useState(false);
   const [uiData, setUiData] = useState(() => {
     const o = {
+      init: true,
       loading: false,
       downloading1: false,
       downloading2: false,
@@ -27,24 +29,10 @@ const page = () => {
       columnmaps: [],
       totalCount: 0,
       totalPage: 0,
-      page: 1,
       dateFrom: null,
       dateTo: null,
       idateFrom: '',
       idateTo: '',
-      sx: 0,
-      sy: 0
-    }
-    if (!localStorage) {
-      return o;
-    }
-
-    const item = localStorage.getItem(uiState);
-    if (item) {
-      const parsed = JSON.parse(item);
-      o.page = parsed.page;
-      o.sx = parsed.sx;
-      o.sy = parsed.sy;
     }
     return o;
   })
@@ -69,9 +57,10 @@ const page = () => {
   const loadPrevious = async () => {
     setUiData(prev => ({ ...prev, loading: true }));
     try {
-      const response = await ReportService.listPrevious(uiData.page, pageSize, '', '', uiData.idateFrom, uiData.idateTo);
+      const response = await ReportService.listPrevious(listStore.getPage(), pageSize, '', '', uiData.idateFrom, uiData.idateTo);
       setUiData(prev => ({
         ...prev,
+        init: false,
         loading: false,
         list: response.data,
         columnmaps: response.columnmaps,
@@ -86,7 +75,7 @@ const page = () => {
     } catch (error) {
 
     } finally {
-      setUiData(prev => ({ ...prev, loading: false }));
+      setUiData(prev => ({ ...prev, init: false, loading: false }));
     }
   }
 
@@ -149,17 +138,8 @@ const page = () => {
     return false;
   }
 
-  const saveUIState = () => {
-    const uiStateData = {
-      page: uiData.page,
-      sx: window.scrollX,
-      sy: window.scrollY,
-    }
-    localStorage.setItem(uiState, JSON.stringify(uiStateData));
-  }
-
   const goto = (path) => {
-    saveUIState();
+    listStore.setScroll(window.scrollX, window.scrollY);
     router.push(`/main/report/master-pd301/${path}`);
   }
 
@@ -169,7 +149,8 @@ const page = () => {
   }
 
   const onPageChange = (page) => {
-    setUiData(prev => ({ ...prev, page, sx: window.scrollX, sy: window.scrollY }));
+    listStore.setPage(page);
+    listStore.setScroll(window.scrollX, window.scrollY);
     setRefresh(prev => !prev);
   }
 
@@ -216,6 +197,7 @@ const page = () => {
     onEdit={(item) => onEdit(item)}
     onPageChange={page => onPageChange(page)}
     uiData={uiData}
+    listStore={listStore}
     onCancelCalendar={() => setCalendar(prev => ({ ...prev, show: false }))}
     onConfirmCalendar={(date) => onConfirmCalendar(date)}
     calendar={calendar}

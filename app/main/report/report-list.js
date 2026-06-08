@@ -20,10 +20,15 @@ export const ReportList = ({
   onEdit,
   onPageChange,
   uiData,
+  listStore,
   onCancelCalendar,
   onConfirmCalendar,
   calendar
 }) => {
+  if (uiData.init) {
+    return <></>
+  }
+  
   return (
     <Container fluid className='p-6'>
       <div className="row mb-2">
@@ -127,12 +132,12 @@ export const ReportList = ({
           {uiData.totalCount > 0 && (
           <div className={`card-footer ${uiData.loading ? 'd-none' : ''}`}>
             <div className="float-start pg-label">
-              Page {uiData.page} / {uiData.totalPage} of {uiData.totalCount} record(s)
+              Page {listStore.getPage()} / {uiData.totalPage} of {uiData.totalCount} record(s)
             </div>
             <div className="float-end">
               <ResponsivePagination
                 total={uiData.totalPage}
-                current={uiData.page}
+                current={listStore.getPage()}
                 onPageChange={page => onPageChange(page)}
               />
             </div>
