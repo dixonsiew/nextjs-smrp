@@ -13,25 +13,24 @@ const page = () => {
   const [loading, setLoading] = useState(false);
 
   const formSubmit = async (data) => {
-    const b = await CityService.create(data);
+    const b = await CountryService.create(data);
     if (b) {
       toast.success(`New ${title} successfully created`);
       childRef.current.resetForm();
     }
   }
 
-  if (loading) {
-    return <Loading />
-  }
-
   return (
-    <Create
-      title={title}
-      data={data}
-      loading={loading}
-      onFormSubmit={formSubmit}
-      ref={childRef}
-    />
+    <>
+      <Loading loading={loading} />
+      <Create
+        title={title}
+        data={data}
+        loading={loading}
+        onFormSubmit={formSubmit}
+        ref={childRef}
+      />
+    </>
   )
 }
 

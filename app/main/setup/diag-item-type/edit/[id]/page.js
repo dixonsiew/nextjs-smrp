@@ -37,18 +37,17 @@ const page = () => {
     }
   }
 
-  if (loading) {
-    return <Loading />
-  }
-
   return (
-    <Create
-      title={title}
-      data={data}
-      loading={loading}
-      onFormSubmit={formSubmit}
-      ref={childRef}
-    />
+    <>
+      <Loading loading={loading} />
+      <Create
+        title={title}
+        data={data}
+        loading={loading}
+        onFormSubmit={formSubmit}
+        ref={childRef}
+      />
+    </>
   )
 }
 

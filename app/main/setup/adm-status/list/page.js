@@ -138,23 +138,28 @@ const page = () => {
   }
 
   if (uiData.loading) {
-    return <Loading />
+    return
   }
 
-  return <List
-    title={title}
-    uiData={uiData}
-    listStore={listStore}
-    onSearch={onSearch}
-    onCreate={() => goto('create')}
-    onSortBy={onSortBy}
-    onDelete={(item) => onDelete(item)}
-    onEdit={(item) => onEdit(item)}
-    onPageChange={page => onPageChange(page)}
-    deleteModal={deleteModal}
-    onCancelDelete={onCancelDelete}
-    onConfirmDelete={onConfirmDelete}
-  />
+  return (
+    <>
+      <Loading loading={uiData.loading} />
+      <List
+        title={title}
+        uiData={uiData}
+        listStore={listStore}
+        onSearch={onSearch}
+        onCreate={() => goto('create')}
+        onSortBy={onSortBy}
+        onDelete={(item) => onDelete(item)}
+        onEdit={(item) => onEdit(item)}
+        onPageChange={page => onPageChange(page)}
+        deleteModal={deleteModal}
+        onCancelDelete={onCancelDelete}
+        onConfirmDelete={onConfirmDelete}
+      />
+    </>
+  )
 }
 
 export default page;

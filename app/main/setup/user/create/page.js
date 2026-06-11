@@ -80,91 +80,90 @@ const page = () => {
     return '';
   }
 
-  if (loading) {
-    return <Loading />
-  }
-
   return (
-    <Container fluid className='p-6'>
-      <div className="row mb-2">
-        <div className="col-12">
-          <h3 className="m-0 text-dark">Add / Edit {title}</h3>
-        </div>
-      </div>
-      <div>
-        <form className="form-horizontal needs-validation" noValidate onSubmit={handleSubmit(formSubmit)}>
-          <div className="card">
-            <div className="card-body">
-              <div className="row mb-2">
-                <label className="col-sm-2 col-form-label">Username&nbsp;<span className="text-danger">*</span></label>
-                <div className="col-sm-10">
-                  <input type="text" placeholder="Username"
-                    className={`form-control ${errors.username ? 'is-invalid' : ''}`}
-                    {...register('username')} 
-                  />
-                  {errors.username && <div className="invalid-feedback">{errors.username.message}</div>}
-                </div>
-              </div>
-              <div className="row mb-2">
-                <label className="col-sm-2 col-form-label">Password&nbsp;<span className="text-danger">*</span></label>
-                <div className="col-sm-10">
-                  <input type="text" placeholder="Password"
-                    className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-                    {...register('password')} 
-                  />
-                  {errors.password && <div className="invalid-feedback">{errors.password.message}</div>}
-                </div>
-              </div>
-              <div className="row mb-2">
-                <label className="col-sm-2 col-form-label">First name&nbsp;<span className="text-danger">*</span></label>
-                <div className="col-sm-10">
-                  <input type="text" placeholder="First name"
-                    className={`form-control ${errors.first_name ? 'is-invalid' : ''}`}
-                    {...register('first_name')} 
-                  />
-                  {errors.first_name && <div className="invalid-feedback">{errors.first_name.message}</div>}
-                </div>
-              </div>
-              <div className="row mb-2">
-                <label className="col-sm-2 col-form-label">Last name</label>
-                <div className="col-sm-10">
-                  <input type="text" placeholder="Last name"
-                    className={`form-control ${errors.last_name ? 'is-invalid' : ''}`}
-                    {...register('last_name')} 
-                  />
-                </div>
-              </div>
-              <div className="row mb-2">
-                <label className="col-sm-2 col-form-label">Role&nbsp;<span className="text-danger">*</span></label>
-                <div className="col-sm-10">
-                  {lockRole && (
-                    <input type="text" placeholder="Role" className="form-control" value={getRole()} readOnly={true} />
-                  )}
-                  {!lockRole && (
-                    <select 
-                      className={`form-select ${errors.role_id ? 'is-invalid' : ''}`} 
-                      {...register('role_id')}
-                    >
-                      <option value="" disabled>Please select</option>
-                      {roles.map((role) => (
-                        <option key={role.id} value={role.id}>
-                          {role.name}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                  {!lockRole && errors.role_id && <div className="invalid-feedback">{errors.role_id.message}</div>}
-                </div>
-              </div>
-            </div>
-            <div className="card-footer">
-              <button type="button" className="btn btn-outline-dark me-2" onClick={() => router.back()}><i className="fas fa-chevron-circle-left"></i> Back</button>
-              <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> Save</button>
-            </div>
+    <>
+      <Loading loading={loading} />
+      <Container fluid className='p-6'>
+        <div className="row mb-2">
+          <div className="col-12">
+            <h3 className="m-0 text-dark">Add / Edit {title}</h3>
           </div>
-        </form>
-      </div>
-    </Container>
+        </div>
+        <div>
+          <form className="form-horizontal needs-validation" noValidate onSubmit={handleSubmit(formSubmit)}>
+            <div className="card">
+              <div className="card-body">
+                <div className="row mb-2">
+                  <label className="col-sm-2 col-form-label">Username&nbsp;<span className="text-danger">*</span></label>
+                  <div className="col-sm-10">
+                    <input type="text" placeholder="Username"
+                      className={`form-control ${errors.username ? 'is-invalid' : ''}`}
+                      {...register('username')}
+                    />
+                    {errors.username && <div className="invalid-feedback">{errors.username.message}</div>}
+                  </div>
+                </div>
+                <div className="row mb-2">
+                  <label className="col-sm-2 col-form-label">Password&nbsp;<span className="text-danger">*</span></label>
+                  <div className="col-sm-10">
+                    <input type="text" placeholder="Password"
+                      className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                      {...register('password')}
+                    />
+                    {errors.password && <div className="invalid-feedback">{errors.password.message}</div>}
+                  </div>
+                </div>
+                <div className="row mb-2">
+                  <label className="col-sm-2 col-form-label">First name&nbsp;<span className="text-danger">*</span></label>
+                  <div className="col-sm-10">
+                    <input type="text" placeholder="First name"
+                      className={`form-control ${errors.first_name ? 'is-invalid' : ''}`}
+                      {...register('first_name')}
+                    />
+                    {errors.first_name && <div className="invalid-feedback">{errors.first_name.message}</div>}
+                  </div>
+                </div>
+                <div className="row mb-2">
+                  <label className="col-sm-2 col-form-label">Last name</label>
+                  <div className="col-sm-10">
+                    <input type="text" placeholder="Last name"
+                      className={`form-control ${errors.last_name ? 'is-invalid' : ''}`}
+                      {...register('last_name')}
+                    />
+                  </div>
+                </div>
+                <div className="row mb-2">
+                  <label className="col-sm-2 col-form-label">Role&nbsp;<span className="text-danger">*</span></label>
+                  <div className="col-sm-10">
+                    {lockRole && (
+                      <input type="text" placeholder="Role" className="form-control" value={getRole()} readOnly={true} />
+                    )}
+                    {!lockRole && (
+                      <select
+                        className={`form-select ${errors.role_id ? 'is-invalid' : ''}`}
+                        {...register('role_id')}
+                      >
+                        <option value="" disabled>Please select</option>
+                        {roles.map((role) => (
+                          <option key={role.id} value={role.id}>
+                            {role.name}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                    {!lockRole && errors.role_id && <div className="invalid-feedback">{errors.role_id.message}</div>}
+                  </div>
+                </div>
+              </div>
+              <div className="card-footer">
+                <button type="button" className="btn btn-outline-dark me-2" onClick={() => router.back()}><i className="fas fa-chevron-circle-left"></i> Back</button>
+                <button type="submit" className="btn btn-primary"><i className="fas fa-save"></i> Save</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </Container>
+    </>
   )
 }
 

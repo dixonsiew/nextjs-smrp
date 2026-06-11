@@ -44,7 +44,7 @@ export const List = ({
             </div>
           </div>
           <div className="card-body">
-            {uiData.list && uiData.list.length === 0 && !uiData.loading &&(
+            {uiData.list && uiData.list.length === 0 && !uiData.loading && (
               <div className="text-center">
                 <h4>No records found</h4>
               </div>

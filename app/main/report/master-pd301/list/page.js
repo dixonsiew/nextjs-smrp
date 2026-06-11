@@ -176,32 +176,33 @@ const page = () => {
     }
   }
 
-  if (uiData.loading) {
-    return <Loading />
-  }
-
-  return <ReportList
-    title={title}
-    placeholderdateFrom={placeholderdateFrom}
-    placeholderdateTo={placeholderdateTo}
-    onChangeFrom={(e) => setUiData(prev => ({ ...prev, idateFrom: e.target.value }))}
-    onChangeTo={(e) => setUiData(prev => ({ ...prev, idateTo: e.target.value }))}
-    onShowCalendarFrom={() => onShowCalendar('from')}
-    onShowCalendarTo={() => onShowCalendar('to')}
-    onApplyFilter={onApplyFilter}
-    onClearFilter={onClearFilter}
-    onToday={onToday}
-    onYesterday={onYesterday}
-    onExport={onExport}
-    onExportXlsx={onExportXlsx}
-    onEdit={(item) => onEdit(item)}
-    onPageChange={page => onPageChange(page)}
-    uiData={uiData}
-    listStore={listStore}
-    onCancelCalendar={() => setCalendar(prev => ({ ...prev, show: false }))}
-    onConfirmCalendar={(date) => onConfirmCalendar(date)}
-    calendar={calendar}
-  />
+  return (
+    <>
+      <Loading loading={uiData.loading} />
+      <ReportList
+        title={title}
+        placeholderdateFrom={placeholderdateFrom}
+        placeholderdateTo={placeholderdateTo}
+        onChangeFrom={(e) => setUiData(prev => ({ ...prev, idateFrom: e.target.value }))}
+        onChangeTo={(e) => setUiData(prev => ({ ...prev, idateTo: e.target.value }))}
+        onShowCalendarFrom={() => onShowCalendar('from')}
+        onShowCalendarTo={() => onShowCalendar('to')}
+        onApplyFilter={onApplyFilter}
+        onClearFilter={onClearFilter}
+        onToday={onToday}
+        onYesterday={onYesterday}
+        onExport={onExport}
+        onExportXlsx={onExportXlsx}
+        onEdit={(item) => onEdit(item)}
+        onPageChange={page => onPageChange(page)}
+        uiData={uiData}
+        listStore={listStore}
+        onCancelCalendar={() => setCalendar(prev => ({ ...prev, show: false }))}
+        onConfirmCalendar={(date) => onConfirmCalendar(date)}
+        calendar={calendar}
+      />
+    </>
+  )
 }
 
 export default page;

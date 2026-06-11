@@ -137,24 +137,25 @@ const page = () => {
     setRefresh(prev => !prev);
   }
 
-  if (uiData.loading) {
-    return <Loading />
-  }
-
-  return <List
-    title={title}
-    uiData={uiData}
-    listStore={listStore}
-    onSearch={onSearch}
-    onCreate={() => goto('create')}
-    onSortBy={onSortBy}
-    onDelete={(item) => onDelete(item)}
-    onEdit={(item) => onEdit(item)}
-    onPageChange={page => onPageChange(page)}
-    deleteModal={deleteModal}
-    onCancelDelete={onCancelDelete}
-    onConfirmDelete={onConfirmDelete}
-  />
+  return (
+    <>
+      <Loading loading={uiData.loading} />
+      <List
+        title={title}
+        uiData={uiData}
+        listStore={listStore}
+        onSearch={onSearch}
+        onCreate={() => goto('create')}
+        onSortBy={onSortBy}
+        onDelete={(item) => onDelete(item)}
+        onEdit={(item) => onEdit(item)}
+        onPageChange={page => onPageChange(page)}
+        deleteModal={deleteModal}
+        onCancelDelete={onCancelDelete}
+        onConfirmDelete={onConfirmDelete}
+      />
+    </>
+  )
 }
 
 export default page;
