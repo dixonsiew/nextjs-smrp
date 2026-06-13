@@ -35,7 +35,8 @@ const page = () => {
     }
 
     const { token, refresh_token } = response;
-    router.replace('/main');
+    window.location.href = `${basePath}/main`;
+    // router.replace('/main', { reload: true });
   };
 
   return (

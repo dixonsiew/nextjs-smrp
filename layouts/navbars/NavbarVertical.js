@@ -105,8 +105,8 @@ const NavbarVertical = (props) => {
           {/* <Link href="#" className="navbar-brand">
             <Image src={`${basePath}/img/${LOGO}`} alt="" />
           </Link> */}
-          <div className="d-flex">
-            <div className="img-logo-sidebar">
+          <div className="d-flex elevation-4">
+            <div className="img-logo">
               <img src={`${basePath}/img/${LOGO}`} className="sidebar-logo" />
             </div>
           </div>
