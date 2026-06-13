@@ -1,0 +1,10 @@
+.sidebar-logo {
+  object-fit: contain;
+  background-color: white;
+  width: 100%;
+  height: 56px;
+}
+
+.img-logo-sidebar {
+  width: 100%;
+}

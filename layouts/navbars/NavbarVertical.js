@@ -18,6 +18,10 @@ import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 
+import './NavbarVertical.css';
+import { LOGO } from '../../app/api/config';
+import { basePath } from '../../next.config';
+
 // import routes file
 import { DashboardMenu } from 'routes/DashboardRoutes';
 
@@ -98,9 +102,14 @@ const NavbarVertical = (props) => {
     <Fragment>
       <SimpleBar style={{ maxHeight: '100vh' }}>
         <div className="nav-scroller">
-          <Link href="#" className="navbar-brand">
-          
-          </Link>
+          {/* <Link href="#" className="navbar-brand">
+            <Image src={`${basePath}/img/${LOGO}`} alt="" />
+          </Link> */}
+          <div className="d-flex">
+            <div className="img-logo-sidebar">
+              <img src={`${basePath}/img/${LOGO}`} className="sidebar-logo" />
+            </div>
+          </div>
         </div>
         {/* Dashboard Menu */}
         <Accordion defaultActiveKey="0" as="ul" className="navbar-nav flex-column">

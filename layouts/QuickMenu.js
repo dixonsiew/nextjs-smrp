@@ -119,11 +119,12 @@ const QuickMenu = () => {
           <Dropdown.Toggle
             as="a"
             bsPrefix=' '
-            className="rounded-circle"
+            className="btn btn-light btn-icon rounded-circle indicator indicator-primary text-muted"
             id="dropdownUser">
-            <div className="avatar avatar-md avatar-indicators avatar-online">
+            <i className="far fa-user"></i>
+            {/* <div className="avatar avatar-md avatar-indicators avatar-online">
               <Image alt="avatar" src={`${basePath}/images/avatar/avatar-1.jpg`} className="rounded-circle" />
-            </div>
+            </div> */}
           </Dropdown.Toggle>
           <Dropdown.Menu
             className="dropdown-menu dropdown-menu-end "

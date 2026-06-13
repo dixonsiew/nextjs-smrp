@@ -1,0 +1,52 @@
+.img-logo {
+  max-width: 70%;
+  height: auto;
+  object-fit: contain;
+}
+
+.mt {
+  margin-top: 2px;
+}
+
+@media screen and (max-width: 480px) {
+  .img-logo {
+    max-width: 70%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .mt {
+    margin-top: -20px;
+  }
+}
+
+.login-logo {
+  font-size: 2.1rem;
+  font-weight: 300;
+  margin-bottom: .9rem;
+  text-align: center;
+}
+
+.hd-1 {
+  font-weight: 900;
+  font-size: 3rem;
+}
+
+.hd-2 {
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.bg {
+  background: url('../../../public/img/bg-login.png') no-repeat center center fixed;
+  width: 100%;
+  height: auto;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  min-height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}

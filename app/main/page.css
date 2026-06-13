@@ -1,0 +1,13 @@
+.bg-main {
+  background: url('../../public/img/bg-home.png') no-repeat center center fixed;
+  width: 100%;
+  height: auto;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  min-height: 91.5%;
+  /* position: fixed; */
+  /* top: 0;
+  left: 0; */
+}

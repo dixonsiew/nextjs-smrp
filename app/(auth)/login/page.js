@@ -9,6 +9,10 @@ import { AuthService } from '../../api/auth';
 import { useState } from 'react';
 import { Loading } from '../../../components/Loading';
 
+import './page.css';
+import { LOGIN_TITLE, LOGO } from '../../api/config';
+import { basePath } from '../../../next.config';
+
 // import hooks
 import useMounted from 'hooks/useMounted';
 
@@ -37,8 +41,17 @@ const page = () => {
   return (
     <>
       <Loading loading={loading} />
-      <Row className="align-items-center justify-content-center g-0 min-vh-100">
+      <Row className="align-items-center justify-content-center g-0 min-vh-100 bg">
         <Col xxl={4} lg={6} md={8} xs={12} className="py-8 py-xl-0">
+          <div className="row mt">
+            <div className="col-sm-12 col-12 text-center">
+              <img src={`${basePath}/img/${LOGO}`} className="img-logo" />
+            </div>
+          </div>
+          <div className="login-logo">
+            <div className="hd-1">SMRP</div>
+            <div className="hd-2">{LOGIN_TITLE}</div>
+          </div>
           {/* Card */}
           <Card className="smooth-shadow-md">
             {/* Card body */}
@@ -52,14 +65,12 @@ const page = () => {
                 <Form onSubmit={handleSubmit}>
                   {/* Username */}
                   <Form.Group className="mb-3" controlId="username">
-                    <Form.Label>Username or email</Form.Label>
-                    <Form.Control type="text" name="username" placeholder="Enter username" required="" value={username} onChange={(e) => setUsername(e.target.value)} />
+                    <Form.Control type="text" name="username" placeholder="Username" required="" value={username} onChange={(e) => setUsername(e.target.value)} />
                   </Form.Group>
 
                   {/* Password */}
                   <Form.Group className="mb-3" controlId="password">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" name="password" placeholder="**************" required="" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <Form.Control type="password" name="password" placeholder="Password" required="" value={password} onChange={(e) => setPassword(e.target.value)} />
                   </Form.Group>
 
                   <div>
